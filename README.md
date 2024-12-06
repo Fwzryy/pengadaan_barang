@@ -4,7 +4,7 @@
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 
 
-
+The **Procurement System** is a Python-based application designed to simplify and streamline the management of goods procurement. It allows users to record items, track stock levels, manage orders, and generate simple reports efficiently.
 
  ![image](https://user-images.githubusercontent.com/17109060/32149040-04f3125c-bd25-11e7-8003-66fd29bc18d4.png)
 
