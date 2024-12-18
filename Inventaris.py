@@ -1,88 +1,136 @@
 from datetime import datetime
 from tabulate import tabulate
+from colorama import Fore, Style
 
 # List inventory
 inventory = []
 
 #* === CRUD ===
 
+line_1 = '-' * 40
+line_2 = '+' * 40
+
 #? FUNCTION TAMBAH BARANG
 def tambah_barang():
-    while True:
-        try:
-            #/ INPUT ID BARANG
-            print('\n')
-            id_barang = int(input("ID Barang :"))
+  while True:
+      try:
+          # INPUT ID BARANG
+          id_barang = int(input("\nID Barang: "))
+          # VALIDASI JIKA ID SUDAH ADA
+          if any(item['id'] == id_barang for item in inventory):
+              print("ID sudah ada! (Masukkan ID barang yang berbeda)\n")
+              continue
+          break  
+      except ValueError:
+          print("Masukkan ID dalam format angka")
 
-            #/ VALIDASI JIKA ID SUDAH ADA
-            if any(item['id'] == id_barang for item in inventory):
-                print("ID sudah ada! (Masukkan ID barang yang berbeda)\n")
-                continue
-            
-            break  
-        except ValueError:
-            print("Masukkan ID dalam format angka")
+    # INPUT TAMBAH BARANG
+  while True:
+    nama_barang = input("Nama Barang: ").strip() #INPUT NAMA
+    if nama_barang: #>(True)
+        break
+    else:
+        print(f"{Fore.YELLOW} -- Nama Barang tidak boleh kosong, Silahkan isi kembali. -- {Style.RESET_ALL}")
 
-    #/ INPUT TAMBAH BARANG
-    nama_barang = input("Nama Barang: ")
-    jumlah = int(input("Jumlah: "))
-    harga = float(input("Harga: "))
-    total_harga = jumlah * harga  #? Menghitung total harga
-    tanggal_masuk = datetime.now().strftime("%Y-%m-%d")
+  while True:
+      try:
+        harga = int(input("Harga: ")) #INPUT HARGA
+        break
+      except ValueError:
+        print("Masukkan harga dalam format angka!")
 
-    #// MENAMBAHKAN DICTIONARY KE DALAM LIST (inventory)
-    inventory.append({
-        'id': id_barang, 
-        'nama_barang': nama_barang,
-        'jumlah': jumlah,
-        'harga': harga,
-        'total_harga': total_harga,
-        'tanggal_masuk': tanggal_masuk
-    })
-    print('''
-          ===============================
-            BARANG BERHASIL DITAMBAHKAN!
-          ===============================
-          ''')
+  while True:
+      try:
+        jumlah = int(input("Jumlah: ")) #INPUT JUMLAH
+        break
+      except ValueError:
+        print("Masukkan jumlah dalam format angka!")
+  total_harga = jumlah * harga  #? Menghitung total harga
+  tanggal_masuk = datetime.now().strftime("%Y-%m-%d")
+    # MENAMBAHKAN DICTIONARY KE DALAM LIST (inventory)
+  inventory.append({
+      'id': id_barang, 
+      'nama_barang': nama_barang,
+      'jumlah': jumlah,
+      'harga': harga,
+      'total_harga': total_harga,
+      'tanggal_masuk': tanggal_masuk
+  })
+  print(f"{line_1}\n{'BARANG BERHASIL DITAMBAHKAN!✅'.center(40)}\n{line_1}")
+
+#? KONFIRMASI UNTUK MENGINPUT ULANG
+  while True:  # Validasi input y/n
+    konfirmasi = input("Ingin menambahkan barang lagi? (y/n): ").strip().lower()
+    if konfirmasi == 'y':
+      tambah_barang()
+      break  # Balik ke loop
+    elif konfirmasi == 'n':
+      print(f"{Fore.GREEN}{line_1}\n{'SELESAI MENAMBAH DATA ✅'.center(40)}\n{line_1}{Style.RESET_ALL}")
+      return  # Keluar 
+    else:
+        print("Pilihan tidak valid! Ketik 'y' untuk Ya atau 'n' untuk Tidak.")
 
 #? FUNCTION UPDATE BARANG
 def update_barang():
-    try:
-        id_barang = int(input("ID Barang: "))
-        for item in inventory:
-            if item['id'] == id_barang:
+  try:
+    id_barang = int(input("ID Barang: "))
+    for item in inventory:
+        if item['id'] == id_barang:
+            print("\nPilih kategori update:\n1. Update Nama Barang📝\n2. Update Stok dan Harga💵")
+            pilihan = input("Pilihan (1/2): ")
+
+            if pilihan == '1':  
                 item['nama_barang'] = input("Nama Barang (tekan Enter untuk tetap sama): ") or item['nama_barang']
 
-                #> SIMPAN JUMLAH DAN HARGA LAMA
+                print(f"{Fore.GREEN}{line_1}\n {'NAMA BARANG BERHASIL DIPERBARUI ✅'.center(40)}\n{line_1}{Style.RESET_ALL}")
+
+            elif pilihan == '2':  # Update Stok
                 jumlah_lama = item['jumlah']
-                harga_lama = item['harga']
+                print("\nPilih jenis update stok:\n1. Tambah Stok\n2. Kurangi Stok\n3. Update Harga")
+                stok_pilihan = input("Pilihan (1/2/3): ")
 
-                #> UPDATE JUMLAH
-                jumlah_input = input("Jumlah (tekan Enter untuk tetap sama): ") 
-                jumlah_baru = int(jumlah_input) if jumlah_input else jumlah_lama
+                if stok_pilihan == '1':  # Tambah Stok
+                    jumlah_input = input("Jumlah tambahan stok (masukkan angka): ")
+                    if jumlah_input.isdigit():
+                        tambahan_stok = int(jumlah_input)
+                        item['jumlah'] = jumlah_lama + tambahan_stok
+                        item['total_harga'] = item['jumlah'] * item['harga']
 
-                #> UPDATE HARGA
-                harga_input = input("Harga (tekan Enter untuk tetap sama): ")
-                harga_baru = float(harga_input) if harga_input else harga_lama
+                        print(f"{Fore.GREEN}{line_1}\n {'STOK BERHASIL DITAMBAH ✅'.center(40)}\n{line_1}{Style.RESET_ALL}")
 
-                #> UPDATE ITEM
-                item['jumlah'] = jumlah_baru
-                item['harga'] = harga_baru
-                item['total_harga'] = jumlah_baru * harga_baru  # Perbarui total harga
+                elif stok_pilihan == '2':  # Kurangi Stok
+                  jumlah_input = input("Jumlah pengurangan stok (masukkan angka): ")
+                  if jumlah_input.isdigit():
+                    pengurangan_stok = int(jumlah_input)
+                    if pengurangan_stok <= jumlah_lama:
+                        item['jumlah'] = jumlah_lama - pengurangan_stok
+                        item['total_harga'] = item['jumlah'] * item['harga']
 
-                print('''
-                  ===============================
-                    BARANG BERHASIL DI UPDATE!
-                  ===============================
-                  ''')
-                return
-        print('''
-              -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-                  BARANG TIDAK DITEMUKAN
-              -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-              ''')
-    except ValueError:
-        print("Masukkan ID dalam format angka!")
+                        print(f"{Fore.GREEN}{line_1}\n {'BARANG BERHASIL DIKURANGI!'.center(40)}\n{line_1}{Style.RESET_ALL}")
+                    else:
+                        print("Pengurangan stok melebihi jumlah stok yang tersedia")
+                  else:
+                    print("Jumlah harus berupa angka positif (+)")
+                elif stok_pilihan == '3':
+                    # Simpan harga lama
+                    harga_lama = item['harga']
+                    harga_baru = input("Harga (tekan Enter untuk tetap sama): ")
+                    item['harga'] = int(harga_baru) if harga_baru else harga_lama
+
+                    item['total_harga'] = item['jumlah'] * item['harga']
+                    print(f"{Fore.GREEN}{line_1}\n {'HARGA BARANG BERHASIL DIPERBARUI ✅'.center(40)}\n{line_1}{Style.RESET_ALL}")  # update harga
+                else:
+                    print("Pilihan tidak valid. Silakan pilih 1, 2 atau 3.")
+            else:
+                print("Pilihan tidak valid. Silakan pilih 1 atau 2.")
+
+            return  
+        print(f"{Fore.RED}{line_2}\n{'BARANG TIDAK DITEMUKAN!❌'.center(40)}\n{line_2}{Style.RESET_ALL}")
+    
+  except ValueError:
+      print("Masukkan ID dalam format angka!")
+
+
 
 #? FUNCTION HAPUS BARANG
 def hapus_barang():
@@ -91,55 +139,38 @@ def hapus_barang():
         for item in inventory:
             if item['id'] == id_barang:
                 inventory.remove(item)
-                print('''
-                  ===============================
-                      BARANG BERHASIL DIHAPUS!
-                  ===============================
-                  ''')
+                print(f"{line_1}\n {'BARANG BERHASIL DIHAPUS ✅'.center(40)} \n{line_1}")
                 return
-        print('''
-              -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-                  BARANG TIDAK DITEMUKAN
-              -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-              ''')
+        print(f"{Fore.RED}{line_2}\n {'BARANG TIDAK DITEMUKAN❌'.center(40)} \n{line_2}")
     except ValueError:
         print("Masukkan ID dalam format angka!")
 
 #? FUNCTION SEARCH
 def cari_barang():
     search_barang = input("Nama Barang: ")
-    for item in inventory:
-        if item['nama_barang'].lower() == search_barang.lower():
-            print('''
-              ===============================
-                      BARANG DITEMUKAN!
-              ===============================
-              ''')
-            print("\nID:", item['id'])
-            print("Nama Barang:", item['nama_barang'])
-            print("Jumlah:", item['jumlah'])
-            print(f"Harga Satuan: Rp {item['harga']:.2f}")
-            print(f"Total Harga: Rp {item['total_harga']:.2f}")
-            print("Tanggal Masuk:", item['tanggal_masuk'])
-            return
-    print('''
-          -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-              BARANG TIDAK DITEMUKAN
-          -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-          ''')
+    barang_ditemukan = [item for item in inventory if item['nama_barang'].lower() == search_barang.lower()]
+    
+    if barang_ditemukan:
+        print(f"{Fore.MAGENTA}{line_1}\n {'BARANG DITEMUKAN ✅'.center(40)} \n{line_1}")
+        # Data untuk tabulate
+        data = [[item['id'], item['nama_barang'], item['jumlah'], 
+                f"Rp {item['harga']:,}", f"Rp {item['total_harga']:,}", 
+                item['tanggal_masuk']] for item in barang_ditemukan]
+        
+        headers = ["ID", "Nama Barang", "Jumlah", "Harga Satuan", "Total Harga", "Tanggal Masuk"]
+        print(tabulate(data, headers=headers, tablefmt="grid"))
+    else:
+        print(f"{Fore.RED}{line_2}\n{'BARANG TIDAK DITEMUKAN❌'.center(40)}\n{line_2}{Style.RESET_ALL}")
+
 
 #? FUNCTION DATA BARANG
 def data_barang():
     if not inventory:
-        print('''
-              -------------------------------
-                    INVENTARIS KOSONG
-              -------------------------------
-              ''')
+        print(f"{Fore.MAGENTA}{line_1}\n {'INVENTARIS KOSONG'.center(40)} \n{line_1}{Style.RESET_ALL}")
         return
 
     # Data untuk tabulate
-    data = [[item['id'], item['nama_barang'], item['jumlah'], f"Rp {item['harga']:.2f}", f"Rp {item['total_harga']:.2f}", item['tanggal_masuk']] for item in inventory]
+    data = [[item['id'], item['nama_barang'], item['jumlah'], f"Rp {int(item['harga']):,}", f"Rp {int(item['total_harga']):,}", item['tanggal_masuk']] for item in inventory]
 
     headers = ["ID", "Nama Barang", "Jumlah", "Harga Satuan", "Total Harga", "Tanggal Masuk"]
     print(tabulate(data, headers=headers, tablefmt="grid"))
@@ -155,18 +186,24 @@ while True:
     print("6. Keluar")
     print('')
 
-    pilihan = input('''---------- Pilih menu (1-6): ----------''')
+    pilihan = input('Pilih Menu (1-6):')
     if pilihan == '1':
+        print('---- Tambah Barang ----')
         tambah_barang() 
     elif pilihan == '2':
+        print('---- Update Barang ----')
         update_barang()
     elif pilihan == '3':
+        print('---- Hapus Barang ----')
         hapus_barang()
     elif pilihan == '4':
+        print('---- Cari Barang ----')
         cari_barang()
     elif pilihan == '5':
+        print('---- Data Barang ----')
         data_barang()
     elif pilihan == '6':
+        print('---- Program Keluar ----')
         break
     else:
         print("Pilihan tidak valid! Silakan coba lagi.")
