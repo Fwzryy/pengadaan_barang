@@ -124,11 +124,11 @@ def update_barang():
             else:
                 print("Pilihan tidak valid. Silakan pilih 1 atau 2.")
 
-            return  
-        print(f"{Fore.RED}{line_2}\n{'BARANG TIDAK DITEMUKAN!❌'.center(40)}\n{line_2}{Style.RESET_ALL}")
+        return  
+    print(f"{Fore.RED}{line_2}\n{'BARANG TIDAK DITEMUKAN!❌'.center(40)}\n{line_2}{Style.RESET_ALL}")
     
   except ValueError:
-      print("Masukkan ID dalam format angka!")
+    print("Masukkan ID dalam format angka!")
 
 
 
@@ -141,7 +141,7 @@ def hapus_barang():
                 inventory.remove(item)
                 print(f"{line_1}\n {'BARANG BERHASIL DIHAPUS ✅'.center(40)} \n{line_1}")
                 return
-        print(f"{Fore.RED}{line_2}\n {'BARANG TIDAK DITEMUKAN❌'.center(40)} \n{line_2}")
+        print(f"{Fore.RED}{line_2}\n {'BARANG TIDAK DITEMUKAN❌'.center(40)}{Style.RESET_ALL} \n{line_2}")
     except ValueError:
         print("Masukkan ID dalam format angka!")
 
@@ -151,7 +151,7 @@ def cari_barang():
     barang_ditemukan = [item for item in inventory if item['nama_barang'].lower() == search_barang.lower()]
     
     if barang_ditemukan:
-        print(f"{Fore.MAGENTA}{line_1}\n {'BARANG DITEMUKAN ✅'.center(40)} \n{line_1}")
+        print(f"{Fore.MAGENTA}{line_1}\n {'BARANG DITEMUKAN ✅'.center(40)}{Style.RESET_ALL} \n{line_1}")
         # Data untuk tabulate
         data = [[item['id'], item['nama_barang'], item['jumlah'], 
                 f"Rp {item['harga']:,}", f"Rp {item['total_harga']:,}", 
