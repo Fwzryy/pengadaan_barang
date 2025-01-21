@@ -1,4 +1,4 @@
-# Procurement System / pengadaan_barang
+# pengadaan_barang
 
 [![forthebadge](http://forthebadge.com/images/badges/made-with-python.svg)](http://forthebadge.com)
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
@@ -30,17 +30,15 @@ The **Procurement System** is a Python-based application designed to simplify an
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/username/procurement-system.git
+   git clone https://github.com/Fwzryy/pengadaan_barang.git
 
-   cd procurement-system / pengadaan_barang
+   cd pengadaan_barang
    pip install -r requirements.txt
    python Inventaris.py
 
      .
     ├── README.md            # Project documentation
-    ├── main.py              # Application entry point
-    ├── modules/             # Additional modules for specific functionalities
-    ├── data/                # Storage for data files (if any)
+    ├── Inventaris.py              # Application entry point
     └── requirements.txt     # Dependency list
 
 ![Screenshot 2024-12-06 225701](https://github.com/user-attachments/assets/630a615b-2796-4f00-83de-90b5cd08a5fb)
